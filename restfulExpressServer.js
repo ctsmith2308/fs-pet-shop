@@ -132,7 +132,6 @@ router.delete('/pets/:id', function(req, res) {
         console.error(writeErr.stack);
         return res.sendStatus(500);
       }
-
       res.set('Content-Type', 'application/json');
       res.send(pet);
     });
