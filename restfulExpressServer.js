@@ -110,5 +110,33 @@ router.patch('/pets/:id', function(req, res) {
   })
 })
 
+router.delete('/pets/:id', function(req, res) {
+  fs.readFile(filePath, 'utf8', function(err, content) {
+    if (err) {
+      console.error(err.stack);
+      return res.sendStatus(500);
+    }
+
+    var id = Number.parseInt(req.params.id);
+    var pets = JSON.parse(content);
+
+    if (id < 0 || id >= pets.length || Number.isNaN(id) ) {
+      return res.sendStatus(404);
+    }
+
+    var pet = pets.splice(id, 1)[0];
+    var newPetsJSON = JSON.stringify(pets);
+
+    fs.writeFile(filePath, newPetsJSON, function(err) {
+      if (err) {
+        console.error(writeErr.stack);
+        return res.sendStatus(500);
+      }
+
+      res.set('Content-Type', 'application/json');
+      res.send(pet);
+    });
+  });
+});
 
 module.exports = router;
